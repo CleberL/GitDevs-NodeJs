@@ -22,7 +22,7 @@ class UserController {
       bio,
       location,
       email,
-      html_url,
+      html_url: link,
     } = response.data;
 
     const dev = await User.create({
@@ -32,7 +32,7 @@ class UserController {
       bio,
       location,
       email,
-      html_url,
+      link,
     });
 
     return res.json(dev);
@@ -47,21 +47,22 @@ class UserController {
   }
 
   async findAll(req, res) {
-    const users = await User.find();
+    const users = await User.find().sort('name');
 
     return res.json(users);
   }
 
   async find(req, res) {
     const { username } = req.params;
+    console.log(username);
 
-    const userData = await User.find({ login: username });
+    const userData = await User.findOne({ login: username });
 
     if (!userData) {
       return res.status(404).json({ error: 'user not exists' });
     }
-
-    return res.status(200).json(userData);
+    console.log(userData);
+    return res.json(userData);
   }
 }
 
